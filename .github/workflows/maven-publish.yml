@@ -3,15 +3,14 @@ name: CI/CD Pipeline
 on:
   workflow_dispatch:
     inputs:
-      env:
-        description: 'Environment selection (Allowed values = dev, qa, stg, prod)'
+      test-type:
+        description: 'Test type selection (Allowed values: smoke, unit, regression): '
         required: true
-        default: 'dev'
+        default: 'smoke'
         options:
-          - dev
-          - qa
-          - stg
-          - prod
+          - smoke
+          - regression
+          - unit
 
 jobs:
   build:
@@ -21,43 +20,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up environment
-        run: echo "Setting up environment..."
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
 
-      - name: Build application
-        run: |
-          echo "Building application..."
-          # Add your build commands here
-
-      - name: Run tests
-        run: |
-          echo "Running tests..."
-          # Add your test commands here
+      - name: Build with Maven
+        run: mvn clean install --batch-mode --no-transfer-progress
 
   post-build:
     needs: build
     runs-on: ubuntu-latest
     env:
-      ENV_SELECTION: ${{ github.event.inputs.env }}
+      TEST_TYPE: ${{ github.event.inputs.test-type }}
 
     steps:
       - name: Deploy to environment
         run: |
-          if [[ "${{ env.ENV_SELECTION }}" == "dev" ]]; then
-            echo "Deploying to dev environment..."
-            # Add your dev deployment steps here
-          elif [[ "${{ env.ENV_SELECTION }}" == "qa" ]]; then
-            echo "Deploying to qa environment..."
-            # Add your qa deployment steps here
-          elif [[ "${{ env.ENV_SELECTION }}" == "stg" ]]; then
-            echo "Deploying to stg environment..."
-            # Add your stg deployment steps here
-          elif [[ "${{ env.ENV_SELECTION }}" == "prod" ]]; then
-            echo "Deploying to prod environment..."
-            # Add your prod deployment steps here
-          fi
+          echo "Deploying the build artifacts..."
 
-      - name: Additional Post-Build Steps
+      - name: Run ${TEST_TYPE} tests
         run: |
-          echo "Performing additional post-build steps..."
-          # Add any additional echo commands or actions you want to execute
+          if [[ "${{ env.TEST_TYPE }}" == "smoke" ]]; then
+            echo "Running smoke tests..."
+            # Add your smoke test commands here
+          elif [[ "${{ env.TEST_TYPE }}" == "regression" ]]; then
+            echo "Running regression tests..."
+            # Add your regression test commands here
+          elif [[ "${{ env.TEST_TYPE }}" == "unit" ]]; then
+            echo "Running unit tests..."
+            # Add your unit test commands here
+          fi

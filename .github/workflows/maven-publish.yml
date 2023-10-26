@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       env:
-        description: 'Environment selection'
+        description: 'Environment selection (Allowed Values: dev,qa,stg,prod)'
         required: true
         default: 'dev'
         options:
@@ -49,15 +49,19 @@ jobs:
         run: |
           if [[ "${{ env.ENV_SELECTION }}" == "dev" ]]; then
             echo "Deploying to dev environment..."
+            echo "This is test for deploying into dev environment"
             # Add your dev deployment steps here
           elif [[ "${{ env.ENV_SELECTION }}" == "qa" ]]; then
             echo "Deploying to qa environment..."
+            echo "This is test for deploying into qa environment"
             # Add your qa deployment steps here
           elif [[ "${{ env.ENV_SELECTION }}" == "stg" ]]; then
             echo "Deploying to stg environment..."
+            echo "This is test for deploying into stg environment"
             # Add your stg deployment steps here
           elif [[ "${{ env.ENV_SELECTION }}" == "prod" ]]; then
             echo "Deploying to prod environment..."
+            echo "This is test for deploying into prod environment"
             # Add your prod deployment steps here
           else
             echo "Invalid environment selection!"

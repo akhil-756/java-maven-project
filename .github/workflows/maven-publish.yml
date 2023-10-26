@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       env:
-        description: 'Environment selection (Allowed Values: dev,qa,stg,prod)'
+        description: 'Environment selection (Allowed values = dev, qa, stg, prod)'
         required: true
         default: 'dev'
         options:
@@ -14,7 +14,7 @@ on:
           - prod
 
 jobs:
-  pre-build:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,19 +24,15 @@ jobs:
       - name: Set up environment
         run: echo "Setting up environment..."
 
-      - name: Run pre-build tasks
-        run: echo "Running pre-build tasks..."
-
-  build:
-    needs: pre-build
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Build application
-        run: echo "Building application..."
+        run: |
+          echo "Building application..."
+          # Add your build commands here
 
       - name: Run tests
-        run: echo "Running tests..."
+        run: |
+          echo "Running tests..."
+          # Add your test commands here
 
   post-build:
     needs: build
@@ -49,21 +45,19 @@ jobs:
         run: |
           if [[ "${{ env.ENV_SELECTION }}" == "dev" ]]; then
             echo "Deploying to dev environment..."
-            echo "This is test for deploying into dev environment"
             # Add your dev deployment steps here
           elif [[ "${{ env.ENV_SELECTION }}" == "qa" ]]; then
             echo "Deploying to qa environment..."
-            echo "This is test for deploying into qa environment"
             # Add your qa deployment steps here
           elif [[ "${{ env.ENV_SELECTION }}" == "stg" ]]; then
             echo "Deploying to stg environment..."
-            echo "This is test for deploying into stg environment"
             # Add your stg deployment steps here
           elif [[ "${{ env.ENV_SELECTION }}" == "prod" ]]; then
             echo "Deploying to prod environment..."
-            echo "This is test for deploying into prod environment"
             # Add your prod deployment steps here
-          else
-            echo "Invalid environment selection!"
-            exit 1
           fi
+
+      - name: Additional Post-Build Steps
+        run: |
+          echo "Performing additional post-build steps..."
+          # Add any additional echo commands or actions you want to execute

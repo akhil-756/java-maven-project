@@ -59,4 +59,7 @@ jobs:
           elif [[ "${{ env.ENV_SELECTION }}" == "prod" ]]; then
             echo "Deploying to prod environment..."
             # Add your prod deployment steps here
+          else
+            echo "Invalid environment selection!"
+            exit 1
           fi

@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: DevOps CI test Pipeline
 
 on:
   workflow_dispatch:

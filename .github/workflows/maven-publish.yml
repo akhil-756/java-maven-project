@@ -1,10 +1,10 @@
-name: DevOps CI test Pipeline
+name: CI/CD Pipeline
 
 on:
   workflow_dispatch:
     inputs:
       test-type:
-        description: 'Test type selection (Allowed values: smoke, unit, regression): '
+        description: 'Test type selection'
         required: true
         default: 'smoke'
         options:
@@ -23,6 +23,12 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
+          java-version: '11'
+
+      - name: Set up Maven
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'maven'
           java-version: '11'
 
       - name: Build with Maven

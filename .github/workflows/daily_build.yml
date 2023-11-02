@@ -24,4 +24,10 @@ jobs:
  
       - name: Run test suites
         run: |
-          mvn clean test
+          mvn clean test -Dsurefire.suiteXmlFiles=testng.xml
+ 
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: target/surefire-reports

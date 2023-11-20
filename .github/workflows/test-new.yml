@@ -1,0 +1,33 @@
+name: Test Pipeline
+on:
+  # schedule:
+  #   - cron: "0 0 * * *"
+  workflow_dispatch:
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+ 
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+ 
+      - name: Install Maven
+        run: |
+          sudo apt update
+          sudo apt install maven -y
+ 
+      - name: Run test suites
+        run: |
+          mvn clean test -Dsurefire.suiteXmlFiles=testng.xml
+ 
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: target/surefire-reports
